@@ -1,0 +1,37 @@
+﻿@model System.Xml.Linq.XElement
+
+@{
+    ViewBag.Title = "Test";
+}
+
+<h2>Test</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Kursnamn
+            </th>
+            <th>
+                HP
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @*..detta är en kommentar..*@
+        @*iterera igenom alla <Kurs> noder i Model som håller vår xml*@
+
+        @foreach (var kurs in Model.Elements("Kurs"))
+        {
+            <tr>
+                <td>
+                    @((string)kurs.Element("Namn"))
+                </td>
+                <td>
+                    @((string)kurs.Element("HP"))
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
