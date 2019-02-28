@@ -81,7 +81,7 @@ namespace LaborationCSN.Controllers
 
         //
         // GET: /Csn/Uppgift1
-        //haha bög
+        
         public ActionResult Uppgift1()
         {
             var xml =
