@@ -123,7 +123,52 @@ namespace LaborationCSN.Controllers
 
         public ActionResult Uppgift2()
         {
-            return View();
+
+            var grupp =
+                new XElement("Datumgruppering",
+                from utbet in csnXml.Descendants(csnsm + "Utbetalning")
+                group utbet by utbet.Element(csntyp + "utbetdatum").Value into g
+                orderby g.Key
+                select new XElement("datumUtbet",
+                    new XElement("Datum", g.Key), g));
+
+            var xml =
+                new XElement("Utbetalningar",
+                    from utbet in grupp.Descendants("datumUtbet")
+                    select new XElement("Utbetalning",
+                                new XElement("Datum", utbet.Element("Datum").Value),
+
+                                new XElement("Totsum", 
+                                                       (from b in utbet.Descendants(csnsm + "Belopp")
+                                                       select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
+
+                                new XElement("Utbetalningar",
+                                    new XElement("Bidrag",
+                                            (from b in utbet.Descendants(csntyp + "Belopp")
+                                            where b.Element(csntyp + "klartext").Value == "Bidrag"
+                                            select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
+                                    new XElement("Lån", 
+                                            (from b in utbet.Descendants(csntyp + "Belopp")
+                                             where b.Element(csntyp + "klartext").Value == "Lån"
+                                             select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
+
+                                    new XElement("Tilläggslån",
+                                            (from b in utbet.Descendants(csntyp + "Belopp")
+                                             where b.Element(csntyp + "klartext").Value == "Tilläggslån"
+                                             select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
+
+                                    new XElement("Tilläggsbidrag",
+                                            (from b in utbet.Descendants(csntyp + "Belopp")
+                                             where b.Element(csntyp + "klartext").Value == "Tilläggsbidrag"
+                                             select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()))));
+
+
+
+                                      
+
+
+
+            return View(xml);
         }
 
         //
