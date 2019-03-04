@@ -6,3 +6,85 @@
 }
 
 <h2>Uppgift 2 - Utbetalningar och bidragstyper</h2>
+<table class="table-bordered" width="50%">
+    <thead>
+        <tr>
+            <th>
+                Datum
+            </th>
+            <th>
+                Totalsumma
+            </th>
+            <th>
+                Utbetalningar
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ foreach (XElement utbet in Model.Descendants("Utbetalning"))
+            {
+
+
+
+
+
+                        <tr>
+                            <td>@((string)utbet.Element("Datum"))</td>
+                            <td>@((string)utbet.Element("Totsum"))</td>
+                            
+                            <td>
+                                <table class="table-bordered" width="100%">
+                                    <tr>
+                                        <td>
+                                            Bidrag
+                                        </td>
+                                        <td>
+                                            @((int)(from u in utbet.Elements("Utbetalningar")
+                                                            select Int32.Parse(u.Element("Bidrag").Value)).Sum())
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Lån
+                                        </td>
+                                        <td>
+                                            @((int)(from u in utbet.Elements("Utbetalningar")
+                                                            select Int32.Parse(u.Element("Lån").Value)).Sum())
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Tillägslån
+                                        </td>
+                                        <td>
+                                            @((int)(from u in utbet.Elements("Utbetalningar")
+                                                            select Int32.Parse(u.Element("Tilläggslån").Value)).Sum())
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Tilläggsbidrag
+                                        </td>
+                                        <td>
+                                            @((int)(from u in utbet.Elements("Utbetalningar")
+                                                            select Int32.Parse(u.Element("Tilläggsbidrag").Value)).Sum())
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                            </td>
+                        </tr>
+
+                    
+
+                
+
+
+
+            }
+
+        }
+
+        
+    </tbody>
+</table>

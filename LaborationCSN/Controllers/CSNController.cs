@@ -81,7 +81,7 @@ namespace LaborationCSN.Controllers
 
         //
         // GET: /Csn/Uppgift1
-        
+
         public ActionResult Uppgift1()
         {
             var xml =
@@ -90,7 +90,7 @@ namespace LaborationCSN.Controllers
                     select new XElement("Ärende",
                               new XElement("lopnummer", arende.Attribute("lopnummer").Value),
                               new XElement("Bidrag", arende.Element(csnsm + "klartext").Value),
-                              
+
                                     from k in arende.Descendants(csnsm + "Utbetalning")
                                     select new XElement("Utbetalningar",
                                         new XElement("Datum", k.Element(csntyp + "utbetdatum").Value),
@@ -138,16 +138,16 @@ namespace LaborationCSN.Controllers
                     select new XElement("Utbetalning",
                                 new XElement("Datum", utbet.Element("Datum").Value),
 
-                                new XElement("Totsum", 
-                                                       (from b in utbet.Descendants(csnsm + "Belopp")
-                                                       select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
+                                new XElement("Totsum",
+                                                       (from b in utbet.Descendants(csntyp + "Belopp")
+                                                        select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
 
                                 new XElement("Utbetalningar",
                                     new XElement("Bidrag",
                                             (from b in utbet.Descendants(csntyp + "Belopp")
-                                            where b.Element(csntyp + "klartext").Value == "Bidrag"
-                                            select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
-                                    new XElement("Lån", 
+                                             where b.Element(csntyp + "klartext").Value == "Bidrag"
+                                             select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
+                                    new XElement("Lån",
                                             (from b in utbet.Descendants(csntyp + "Belopp")
                                              where b.Element(csntyp + "klartext").Value == "Lån"
                                              select Int32.Parse(b.Element(csntyp + "totbelopp").Value)).Sum()),
@@ -164,7 +164,8 @@ namespace LaborationCSN.Controllers
 
 
 
-                                      
+
+
 
 
 
@@ -176,7 +177,30 @@ namespace LaborationCSN.Controllers
 
         public ActionResult Uppgift3()
         {
-            return View();
+
+
+            var xml =
+                 new XElement("BeviljadeTider",
+
+
+                            from beviljadTid in csnXml.Descendants(csnsm + "BeviljadTid")
+                            select new XElement("BeviljadTid",
+                                from b in beviljadTid.Elements(csntyp + "starttid")
+                                select new XElement("Startdatum", b.Value),
+
+
+                                from b in beviljadTid.Elements(csntyp + "sluttid")
+                                select new XElement("Slutdatum", b.Value),
+
+                                from arende in csnXml.Descendants(csnper + "Arende")
+                                
+                                select new XElement("Typ", arende.Element(csnsm + "klartext").Value),
+
+                                from b in beviljadTid.Elements(csntyp + "totbelopp")
+                                select new XElement("Summa", b.Value)));
+
+
+            return View(xml);
         }
     }
 }

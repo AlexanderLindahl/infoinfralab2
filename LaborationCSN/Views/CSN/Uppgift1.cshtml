@@ -13,18 +13,37 @@
 }
 @{  foreach (XElement arende in Model.Descendants("Ärende"))
     {
-        <table>
+        <h3>Ärende @((string)arende.Element("lopnummer"))</h3>
+        <p>Bidrag: @((string)arende.Element("Bidrag"))</p>
+        <table class="table-bordered" width="50%">
             <thead>
                 <tr>
                     <th>
-                        Ärende @((string)("Namn")) 
+                        Datum
                     </th>
                     <th>
-                        HP
+                        Status
+                    </th>
+                    <th>
+                        Summa
                     </th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                
+                 @{ foreach (XElement utbet in arende.Elements("Utbetalningar"))
+                       {
+                           <tr>
+                                <td>@((string)utbet.Element("Datum"))</td>
+                                <td>@((string)utbet.Element("Status"))</td>
+                                <td>@((string)utbet.Element("Summa"))</td>
+                           </tr>
+
+                       }
+
+                  }
+
+            </tbody>
         </table>
     }
 
