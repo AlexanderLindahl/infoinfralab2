@@ -11,7 +11,7 @@
     // Detta är det XElement-objekt som skickats till vyn
     XElement xml = Model;
 }
-@{  foreach (XElement arende in Model.Descendants("Ärende"))
+@{ foreach (XElement arende in Model.Descendants("Ärende"))
     {
         <h3>Ärende @((string)arende.Element("lopnummer"))</h3>
         <p>Bidrag: @((string)arende.Element("Bidrag"))</p>
@@ -28,23 +28,37 @@
                         Summa
                     </th>
                 </tr>
+
             </thead>
             <tbody>
-                
-                 @{ foreach (XElement utbet in arende.Elements("Utbetalningar"))
-                       {
-                           <tr>
-                                <td>@((string)utbet.Element("Datum"))</td>
-                                <td>@((string)utbet.Element("Status"))</td>
-                                <td>@((string)utbet.Element("Summa"))</td>
-                           </tr>
 
-                       }
+                @{ foreach (XElement utbet in arende.Elements("Utbetalningar"))
+                    {
+                        <tr>
+                            <td>@((string)utbet.Element("Datum"))</td>
+                            <td>@((string)utbet.Element("Status"))</td>
+                            <td>@((string)utbet.Element("Summa"))</td>
 
-                  }
+                        </tr>
+                    }
+                    <tr>
+                        <td>Total Summa: </td>
+                        <td>@((int)arende.Element("Summor").Element("TotalSumma"))</td>
+                    </tr>
+                    <tr>
+                        <td>Utbetald Summa: </td>
+                        <td>@((int)arende.Element("Summor").Element("UtbSum"))</td>
+                    </tr>
+                    <tr>
+                        <td>Kvarvarande Summa: </td>
+                        <td>@((int)arende.Element("Summor").Element("PlanSum"))</td>
+                    </tr>
+
+
+                }
 
             </tbody>
         </table>
     }
 
- }
+}
